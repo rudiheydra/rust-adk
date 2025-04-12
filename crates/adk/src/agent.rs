@@ -1,8 +1,7 @@
-use async_trait::async_trait;
 use std::sync::Arc;
 
 use crate::error::{AgentError, AgentResult};
-use crate::model::Model;
+use crate::openai::Model;
 use crate::tool::Tool;
 use crate::types::{Context, RunContext};
 
@@ -58,7 +57,7 @@ impl Agent {
         &self.name
     }
 
-    /// Get the instructions of the agent
+    /// Get the instructions for the agent
     pub fn instructions(&self) -> Option<&str> {
         self.instructions.as_deref()
     }
@@ -110,13 +109,7 @@ impl AgentBuilder {
     pub fn build(self) -> AgentResult<Agent> {
         let model = self
             .model
-            .ok_or_else(|| AgentError::InternalError("Model not set".into()))?;
-
-        Ok(Agent {
-            name: self.name,
-            instructions: self.instructions,
-            model,
-            tools: self.tools,
-        })
+            .ok_or_else(|| AgentError::ConfigurationError("Model not set".into()))?;
+        Ok(Agent::new(self.name, self.instructions, model, self.tools))
     }
 }

@@ -1,9 +1,10 @@
 use async_trait::async_trait;
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 use crate::error::AgentResult;
 use crate::types::RunContext;
+
+// Re-export the procedural macro
+pub use adk_macros::tool_fn;
 
 /// Represents the result of a tool execution
 #[derive(Debug, Clone)]
@@ -30,12 +31,14 @@ pub trait Tool: Send + Sync {
     async fn execute(&self, context: &mut RunContext, params: &str) -> AgentResult<ToolResult>;
 }
 
+type FunctionToolFn = Box<dyn Fn(&mut RunContext, &str) -> AgentResult<ToolResult> + Send + Sync>;
+
 /// A function-based tool implementation
 pub struct FunctionTool {
     name: String,
     description: String,
     parameters_schema: serde_json::Value,
-    function: Box<dyn Fn(&mut RunContext, &str) -> AgentResult<ToolResult> + Send + Sync>,
+    function: FunctionToolFn,
 }
 
 impl FunctionTool {
@@ -43,13 +46,13 @@ impl FunctionTool {
         name: impl Into<String>,
         description: impl Into<String>,
         parameters_schema: serde_json::Value,
-        function: impl Fn(&mut RunContext, &str) -> AgentResult<ToolResult> + Send + Sync + 'static,
+        function: FunctionToolFn,
     ) -> Self {
         Self {
             name: name.into(),
             description: description.into(),
             parameters_schema,
-            function: Box::new(function),
+            function,
         }
     }
 }
@@ -76,6 +79,7 @@ impl Tool for FunctionTool {
 /// A macro to create a function tool with automatic parameter schema generation
 #[macro_export]
 macro_rules! function_tool {
+    // Original simple case (no parameters)
     ($name:expr, $description:expr, $function:expr) => {
         $crate::tool::FunctionTool::new(
             $name,
@@ -85,7 +89,17 @@ macro_rules! function_tool {
                 "properties": {},
                 "required": []
             }),
-            $function,
+            Box::new($function),
+        )
+    };
+
+    // New case that accepts custom schema
+    ($name:expr, $description:expr, $schema:expr, $function:expr) => {
+        $crate::tool::FunctionTool::new(
+            $name,
+            $description,
+            $schema,
+            Box::new($function),
         )
     };
 }

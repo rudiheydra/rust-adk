@@ -1,10 +1,14 @@
-use rust_agent_kit::prelude::*;
+use rust_adk::agent::AgentBuilder;
+use rust_adk::openai::OpenAI;
+use rust_adk::prelude::*;
+use rust_adk::{AgentError, Tool, ToolResult};
+use async_trait::async_trait;
 use std::sync::Arc;
 
 // Define a simple calculator tool
 struct CalculatorTool;
 
-#[async_trait::async_trait]
+#[async_trait]
 impl Tool for CalculatorTool {
     fn name(&self) -> &str {
         "calculator"
@@ -33,7 +37,11 @@ impl Tool for CalculatorTool {
         })
     }
 
-    async fn execute(&self, _context: &mut RunContext, params: &str) -> AgentResult<ToolResult> {
+    async fn execute(
+        &self,
+        _context: &mut RunContext,
+        params: &str,
+    ) -> Result<ToolResult, AgentError> {
         let params: serde_json::Value = serde_json::from_str(params)?;
 
         let operation = params["operation"]
@@ -67,13 +75,11 @@ impl Tool for CalculatorTool {
 }
 
 #[tokio::main]
-async fn main() -> AgentResult<()> {
+async fn main() -> Result<(), AgentError> {
     // Initialize the OpenAI model
     let model = Arc::new(OpenAI::new(
         std::env::var("OPENAI_API_KEY").expect("OPENAI_API_KEY not set"),
         "gpt-4",
-        0.7,
-        Some(1000),
     ));
 
     // Create the calculator tool

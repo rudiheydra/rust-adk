@@ -14,6 +14,9 @@ pub enum AgentError {
     #[error("Context error: {0}")]
     ContextError(String),
 
+    #[error("Configuration error: {0}")]
+    ConfigurationError(String),
+
     #[error("Serialization error: {0}")]
     SerializationError(#[from] serde_json::Error),
 
