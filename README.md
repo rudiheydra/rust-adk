@@ -21,98 +21,61 @@ adk = "0.1.0"
 
 ## Quick Start
 
-Here's a simple example of creating an agent with custom tools:
+Here's a simple example of creating an agent with custom tools(more examples in the `crates/adk/examples` directory):
 
 ```rust
-use adk::error::AgentResult;
+use adk::agent::AgentBuilder;
+use adk::openai::OpenAI;
 use adk::prelude::*;
-use adk::tool::{tool_fn, Tool, ToolResult};
-use adk::types::RunContext;
+use adk_macros::tool_fn;
 use std::sync::Arc;
 
-// Define a calculator tool using the procedural macro
+// Define a calculator tool using the tool_fn macro
 #[tool_fn(
     name = "calculator",
-    description = "A simple calculator that performs basic arithmetic"
+    description = "A simple calculator that can perform basic arithmetic operations(add, subtract, multiply, divide)"
 )]
-fn calculator(_context: &mut RunContext, a: i32, b: i32, operation: String) -> String {
-    match operation.as_str() {
-        "add" => format!("{} + {} = {}", a, b, a + b),
-        "subtract" => format!("{} - {} = {}", a, b, a - b),
-        "multiply" => format!("{} * {} = {}", a, b, a * b),
+fn calculator(_context: &mut RunContext, a: f64, b: f64, operation: String) -> String {
+    // Perform the calculation based on the operation
+    let result = match operation.as_str() {
+        "add" => a + b,
+        "subtract" => a - b,
+        "multiply" => a * b,
         "divide" => {
-            if b == 0 {
-                "Error: Division by zero".to_string()
-            } else {
-                format!("{} / {} = {}", a, b, a / b)
+            if b == 0.0 {
+                return "Error: Division by zero".to_string();
             }
+            a / b
         }
-        _ => format!("Unknown operation: {}", operation),
-    }
-}
+        _ => return format!("Error: Invalid operation '{}'", operation),
+    };
 
-// Alternatively, define a tool using the function_tool macro
-fn create_manual_calculator_tool() -> adk::tool::FunctionTool {
-    use adk::function_tool;
-
-    function_tool!(
-        "manual_calculator",
-        "A manually defined calculator tool",
-        |_context: &mut RunContext, params: &str| -> AgentResult<ToolResult> {
-            let params: serde_json::Value = serde_json::from_str(params)?;
-
-            let a = params["a"].as_i64().unwrap_or(0) as i32;
-            let b = params["b"].as_i64().unwrap_or(0) as i32;
-            let operation = params["operation"].as_str().unwrap_or("add");
-
-            let result = match operation {
-                "add" => format!("{} + {} = {}", a, b, a + b),
-                "subtract" => format!("{} - {} = {}", a, b, a - b),
-                "multiply" => format!("{} * {} = {}", a, b, a * b),
-                "divide" => {
-                    if b == 0 {
-                        "Error: Division by zero".to_string()
-                    } else {
-                        format!("{} / {} = {}", a, b, a / b)
-                    }
-                }
-                _ => format!("Unknown operation: {}", operation),
-            };
-
-            Ok(ToolResult {
-                tool_name: "manual_calculator".to_string(),
-                output: result,
-            })
-        }
-    )
+    // Return the result as a string
+    result.to_string()
 }
 
 #[tokio::main]
-async fn main() -> AgentResult<()> {
-    // Initialize your model - Note: OpenAI reference implementation is still in progress
-    // For now, you would need to implement the Model trait for your specific LLM provider
-    let model = Arc::new(YourModelImplementation::new(
-        "your-api-key",
-        "model-name",
-        0.7,  // temperature
+async fn main() -> Result<(), AgentError> {
+    // Initialize the OpenAI model
+    let model = Arc::new(OpenAI::new(
+        std::env::var("OPENAI_API_KEY").expect("OPENAI_API_KEY not set"),
+        "gpt-4",
     ));
 
-    // Create the calculator tools
-    let calc_tool = Arc::new(calculator_tool());
-    let manual_calc_tool = Arc::new(create_manual_calculator_tool());
+    // Create the calculator tool using the generated function from the macro
+    let calculator = Arc::new(calculator_tool());
 
     // Create an agent using the builder pattern
     let agent = AgentBuilder::new("math_agent")
-        .instructions("You are a helpful math assistant. Use the calculator tools to perform calculations when needed.")
+        .instructions("You are a helpful math assistant. Use the calculator tool to perform calculations when needed.")
         .model(model)
-        .add_tool(calc_tool)
-        .add_tool(manual_calc_tool)
+        .add_tool(calculator)
         .build()?;
 
     // Run the agent with a math problem
     let result = agent
         .run(
-            "What is 123 + 456? Please use the calculator tool to compute this.",
+            "What is 15.7 * 9.2? Please use the calculator tool to compute this.",
             Context::new(),
         )
         .await?;
@@ -121,6 +84,7 @@ async fn main() -> AgentResult<()> {
 
     Ok(())
 }
+
 ```
 
 ## Core Components
