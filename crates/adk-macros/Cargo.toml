@@ -3,6 +3,9 @@ name = "adk-macros"
 version = "0.1.0"
 edition = "2024"
 description = "Procedural macros for rust-adk"
+authors = ["Gary Y<s14031403@gmail.com>"]
+license = "MIT"
+repository = "https://github.com/yougigun/rust-adk"
 
 [lib]
 proc-macro = true

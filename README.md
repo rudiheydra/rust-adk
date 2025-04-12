@@ -16,7 +16,7 @@ Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-rust-adk = "0.1.0"
+adk = "0.1.0"
 ```
 
 ## Quick Start
@@ -24,10 +24,10 @@ rust-adk = "0.1.0"
 Here's a simple example of creating an agent with custom tools:
 
 ```rust
-use rust_adk::error::AgentResult;
-use rust_adk::prelude::*;
-use rust_adk::tool::{tool_fn, Tool, ToolResult};
-use rust_adk::types::RunContext;
+use adk::error::AgentResult;
+use adk::prelude::*;
+use adk::tool::{tool_fn, Tool, ToolResult};
+use adk::types::RunContext;
 use std::sync::Arc;
 
 // Define a calculator tool using the procedural macro
@@ -52,8 +52,8 @@ fn calculator(_context: &mut RunContext, a: i32, b: i32, operation: String) -> S
 }
 
 // Alternatively, define a tool using the function_tool macro
-fn create_manual_calculator_tool() -> rust_adk::tool::FunctionTool {
-    use rust_adk::function_tool;
+fn create_manual_calculator_tool() -> adk::tool::FunctionTool {
+    use adk::function_tool;
 
     function_tool!(
         "manual_calculator",

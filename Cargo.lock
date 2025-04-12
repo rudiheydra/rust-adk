@@ -12,6 +12,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "adk"
+version = "0.1.0"
+dependencies = [
+ "adk-macros",
+ "anyhow",
+ "async-openai",
+ "async-trait",
+ "futures",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.12",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "typetag",
+]
+
+[[package]]
 name = "adk-macros"
 version = "0.1.0"
 dependencies = [
@@ -143,7 +161,7 @@ checksum = "d71b6127be86fdcfddb610f7182ac57211d4b18a3e9c82eb2d17662f2227ad6a"
 name = "calculator-tool-example"
 version = "0.1.0"
 dependencies = [
- "rust-adk",
+ "adk",
  "serde_json",
  "tokio",
 ]
@@ -1108,24 +1126,6 @@ dependencies = [
  "libc",
  "untrusted",
  "windows-sys 0.52.0",
-]
-
-[[package]]
-name = "rust-adk"
-version = "0.1.0"
-dependencies = [
- "adk-macros",
- "anyhow",
- "async-openai",
- "async-trait",
- "futures",
- "serde",
- "serde_json",
- "thiserror 2.0.12",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "typetag",
 ]
 
 [[package]]

@@ -1,7 +1,7 @@
-use rust_adk::error::AgentResult;
-use rust_adk::prelude::*;
-use rust_adk::tool::{Tool, ToolResult, tool_fn};
-use rust_adk::types::RunContext;
+use adk::error::AgentResult;
+use adk::prelude::*;
+use adk::tool::{Tool, ToolResult, tool_fn};
+use adk::types::RunContext;
 
 // Define a calculator tool using our procedural macro
 #[tool_fn(
@@ -25,8 +25,8 @@ fn calculator(_context: &mut RunContext, a: i32, b: i32, operation: String) -> S
 }
 
 // Use the traditional method of creating a tool for comparison
-fn create_manual_calculator_tool() -> rust_adk::tool::FunctionTool {
-    use rust_adk::function_tool;
+fn create_manual_calculator_tool() -> adk::tool::FunctionTool {
+    use adk::function_tool;
 
     function_tool!(
         "manual_calculator",

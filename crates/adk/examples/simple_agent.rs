@@ -1,7 +1,7 @@
-use rust_adk::agent::AgentBuilder;
-use rust_adk::openai::OpenAI;
-use rust_adk::prelude::*;
-use rust_adk::{AgentError, Tool, ToolResult};
+use adk::agent::AgentBuilder;
+use adk::openai::OpenAI;
+use adk::prelude::*;
+use adk::{AgentError, Tool, ToolResult};
 use async_trait::async_trait;
 use std::sync::Arc;
 

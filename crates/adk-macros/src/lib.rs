@@ -123,11 +123,11 @@ pub fn tool_fn(attr: TokenStream, item: TokenStream) -> TokenStream {
         #input_fn
 
         // Create a tool function that returns a FunctionTool
-        pub fn #tool_fn_name() -> ::rust_adk::tool::FunctionTool {
-            use rust_adk::error::AgentError;
-            use rust_adk::tool::ToolResult;
+        pub fn #tool_fn_name() -> ::adk::tool::FunctionTool {
+            use adk::error::AgentError;
+            use adk::tool::ToolResult;
 
-            ::rust_adk::tool::FunctionTool::new(
+            ::adk::tool::FunctionTool::new(
                 #tool_name,
                 #tool_description,
                 // Generate schema based on function parameters

@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-rust-adk = { path = "../crates/adk" }
+adk = { path = "../crates/adk" }
 serde_json = "1.0"
 tokio = { version = "1.36", features = ["full"] }
