@@ -1,7 +1,5 @@
-//! Agent Kit - A Rust implementation of OpenAI agents kit
-//!
-//! This crate provides a Rust implementation of the OpenAI agents kit,
-//! allowing you to create and manage AI agents using the OpenAI API.
+// Re-export the proc macros so users don't need to import adk-macros
+pub use adk_macros::*;
 
 pub mod agent;
 pub mod error;
@@ -16,7 +14,8 @@ pub use tool::{Tool, ToolResult};
 
 /// Re-export common types for convenience
 pub mod prelude {
-    pub use super::types::*;
     pub use super::Agent;
     pub use super::AgentError;
+    pub use super::tool_fn;
+    pub use super::types::*; // Also expose tool_fn in the prelude
 }

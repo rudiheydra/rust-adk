@@ -1,15 +1,33 @@
 use proc_macro::TokenStream;
 use quote::{format_ident, quote};
 use syn::Lit;
-use syn::{parse_macro_input, Expr, ExprLit, FnArg, ItemFn, Pat, PatType, Type};
+use syn::{Expr, ExprLit, FnArg, ItemFn, Pat, PatType, Type, parse_macro_input};
 
 /// A procedural macro that generates a tool with parameter schema from a function signature
 ///
 /// Usage:
 /// ```
-/// #[tool_fn(name = "calculator", description = "A simple calculator")]
-/// fn calculator(context: &mut RunContext, a: i32, b: i32, operation: String) -> String {
-///     // Function implementation
+/// #[tool_fn(
+///     name = "calculator",
+///     description = "A simple calculator that can perform basic arithmetic operations(add, subtract, multiply, divide)"
+/// )]
+/// fn calculator(_context: &mut RunContext, a: f64, b: f64, operation: String) -> String {
+///     // Perform the calculation based on the operation
+///     let result = match operation.as_str() {
+///         "add" => a + b,
+///         "subtract" => a - b,
+///         "multiply" => a * b,
+///         "divide" => {
+///             if b == 0.0 {
+///                 return "Error: Division by zero".to_string();
+///             }
+///             a / b
+///         }
+///         _ => return format!("Error: Invalid operation '{}'", operation),
+///     };
+///
+///     // Return the result as a string
+///     result.to_string()
 /// }
 /// ```
 #[proc_macro_attribute]

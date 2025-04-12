@@ -2,7 +2,7 @@ use adk::AgentError;
 use adk::agent::AgentBuilder;
 use adk::openai::OpenAI;
 use adk::prelude::*;
-use adk_macros::tool_fn;
+use adk::tool_fn;
 use std::sync::Arc;
 
 // Define a calculator tool using the tool_fn macro

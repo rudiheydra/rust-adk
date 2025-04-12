@@ -27,7 +27,7 @@ Here's a simple example of creating an agent with custom tools(more examples in 
 use adk::agent::AgentBuilder;
 use adk::openai::OpenAI;
 use adk::prelude::*;
-use adk_macros::tool_fn;
+use adk::tool_fn;
 use std::sync::Arc;
 
 // Define a calculator tool using the tool_fn macro
@@ -170,8 +170,7 @@ The `Context` and `RunContext` types manage the state of the conversation and pr
 
 The project is organized into the following components:
 
-- `crates/adk`: The main library crate
-- `crates/adk-macros`: Procedural macros for tool definitions
+- `crates/adk`: The main library crate with integrated macros
 - `examples`: Example applications using the library
 
 ## Contributing
