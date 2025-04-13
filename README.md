@@ -171,7 +171,7 @@ The `Context` and `RunContext` types manage the state of the conversation and pr
 The project is organized into the following components:
 
 - `crates/adk`: The main library crate with integrated macros
-- `examples`: Example applications using the library. i.e. Run `cargo run --bin calculator-example` to see the calculator example.
+- `examples`: Example applications using the library. i.e. Run `cargo run -p examples --bin simple_agent` to see the calculator example.
 
 ## Contributing
 
