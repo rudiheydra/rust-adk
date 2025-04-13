@@ -6,7 +6,8 @@ use syn::{Expr, ExprLit, FnArg, ItemFn, Pat, PatType, Type, parse_macro_input};
 /// A procedural macro that generates a tool with parameter schema from a function signature
 ///
 /// Usage:
-/// ```
+/// ```ignore
+///
 /// #[tool_fn(
 ///     name = "calculator",
 ///     description = "A simple calculator that can perform basic arithmetic operations(add, subtract, multiply, divide)"
