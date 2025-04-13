@@ -78,7 +78,7 @@ impl Tool for CalculatorTool {
 async fn main() -> Result<(), AgentError> {
     // Initialize the OpenAI model
     let model = Arc::new(OpenAI::new(
-        std::env::var("OPENAI_API_KEY").expect("OPENAI_API_KEY not set"),
+        std::env::var("OPENAI_API_KEY").expect("OPENAI_API_KEY not set in environment variables"),
         "gpt-4",
     ));
 
