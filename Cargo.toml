@@ -3,9 +3,10 @@ members = ["crates/adk", "examples", "integration"]
 resolver = "2"
 
 [workspace.package]
+name = "substr8-agent-sdk"
 version = "0.1.0"
 edition = "2024"
-authors = ["Gary Y<s14031403@gmail.com>"]
+authors = ["Gary Y<s14031403@gmail.com>", "Rudi H<rudi.heydra@gmail.com>"]
 license = "MIT"
 repository = "https://github.com/yougigun/rust-adk"
 
